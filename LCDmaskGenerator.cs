@@ -107,7 +107,7 @@ public class Encoder
 		
 			byte[] array = new byte[num * num2 * 2];
 			spi_file_head_t spi_file_head_t = default(spi_file_head_t);
-			spi_file_head_t.magic_num = (SPI_FILE_MAGIC_BASE | 0xB);
+			spi_file_head_t.magic_num = (SPI_FILE_MAGIC_BASE | 0x1F);
 			int num3 = generatePicDat(num, num2, SourceFile, array);
 			if (num3 > 0)
 			{
