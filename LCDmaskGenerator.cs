@@ -69,24 +69,38 @@ public class Encoder
 						return -1;
 					}
 
-					//map pixels to output array...
-					BitmapData bitmapData = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height),
-						ImageLockMode.ReadOnly, PixelFormat.Format8bppIndexed);
-					
-					IntPtr p = bitmapData.Scan0;
-					
+//					//map pixels to output array...
+//					BitmapData bitmapData = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height),
+//						ImageLockMode.ReadOnly, PixelFormat.Format8bppIndexed);
+//					
+//					IntPtr p = bitmapData.Scan0;
+//					
+//					for (int y = 0; y < bmp.Height; y++)
+//					{
+//						for (int x = 0; x < bmp.Width; x++)
+//						{
+//							dat[y * bitmapData.Width + x] = System.Runtime.InteropServices.Marshal.ReadByte(p, y * bitmapData.Stride + x);
+//							//Check and trim white range
+//							if (dat[y * bitmapData.Width + x] > 0xFD) dat[y * bitmapData.Width + x] = 0xFD;
+//							num++;
+//						}
+//					}
+//					
+//					bmp.UnlockBits(bitmapData);
+
+					//Mapped image is not editor friendly, move to 24bppRgb
 					for (int y = 0; y < bmp.Height; y++)
 					{
 						for (int x = 0; x < bmp.Width; x++)
 						{
-							dat[y * bitmapData.Width + x] = System.Runtime.InteropServices.Marshal.ReadByte(p, y * bitmapData.Stride + x);
+							Color pixel = bmp.GetPixel(x, y);
+							dat[y * bmp.Width + x] = (byte)((pixel.B + pixel.G + pixel.R)/3);
 							//Check and trim white range
-							if (dat[y * bitmapData.Width + x] > 0xFD) dat[y * bitmapData.Width + x] = 0xFD;
+							if (dat[y * bmp.Width + x] > 0xFD) dat[y * bmp.Width + x] = 0xFD;
 							num++;
 						}
 					}
-					
-					bmp.UnlockBits(bitmapData);
+
 					return num;
 
 				}

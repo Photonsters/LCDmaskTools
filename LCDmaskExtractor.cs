@@ -35,31 +35,42 @@ public class Extractor
 
 		private bool GetDataPicture(int w, int h, byte[] data, string fileName)
 		{
-			Bitmap bitmap = new Bitmap(w, h, PixelFormat.Format8bppIndexed);
+			//Bitmap bitmap = new Bitmap(w, h, PixelFormat.Format8bppIndexed);
+			Bitmap bitmap = new Bitmap(w, h, PixelFormat.Format24bppRgb);
 			
-			//build and fillup the grayscale-palette
-			ColorPalette palette = bitmap.Palette;
-			for (int i = 0; i < 256; i++)
-			{
-				palette.Entries[i] = Color.FromArgb(i, i, i);
-			}
-			bitmap.Palette = palette;
+//			//build and fillup the grayscale-palette
+//			ColorPalette palette = bitmap.Palette;
+//			for (int i = 0; i < 256; i++)
+//			{
+//				palette.Entries[i] = Color.FromArgb(i, i, i);
+//			}
+//			bitmap.Palette = palette;
+//
+//			//map pixels to colors...
+//			BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+//				ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
+//			
+//			IntPtr p = bitmapData.Scan0;
+//			
+//			for (int y = 0; y < bitmap.Height; y++)
+//			{
+//				for (int x = 0; x < bitmap.Width; x++)
+//				{
+//					System.Runtime.InteropServices.Marshal.WriteByte(p, y * bitmapData.Stride + x, data[y * bitmapData.Width + x]);
+//				}
+//			}
+//			
+//			bitmap.UnlockBits(bitmapData);
 
-			//map pixels to colors...
-			BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-				ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
-			
-			IntPtr p = bitmapData.Scan0;
-			
+			//Mapped image is not editor friendly, move to 24bppRgb
 			for (int y = 0; y < bitmap.Height; y++)
 			{
 				for (int x = 0; x < bitmap.Width; x++)
 				{
-					System.Runtime.InteropServices.Marshal.WriteByte(p, y * bitmapData.Stride + x, data[y * bitmapData.Width + x]);
+					Color color = Color.FromArgb(data[y * bitmap.Width + x], data[y * bitmap.Width + x], data[y * bitmap.Width + x]);
+					bitmap.SetPixel(x, y, color);
 				}
 			}
-			
-			bitmap.UnlockBits(bitmapData);
 			
 			//save bmp file
 			try
